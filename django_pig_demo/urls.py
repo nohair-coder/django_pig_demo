@@ -17,9 +17,8 @@ from django.urls import path
 from app.login.views import LoginCheck
 from app.station.views import Station, SystemCheck
 from app.pig_base.views import PigBaseCheck
-from app.fit.views import GetPoint,GetCoefficient
+# from app.fit.views import GetPoint,GetCoefficient
 from app.food_quantity.views import SetIntake
-from app.fit.views import LineFit
 
 urlpatterns = [
     path('login/', LoginCheck.as_view()),
@@ -27,7 +26,4 @@ urlpatterns = [
     path('station/', Station.as_view()),
     path('pigbase/', PigBaseCheck.as_view()),
     path('setintake/', SetIntake.as_view()),
-    path('linefit/',LineFit.as_view()),
-    path('getpoint/', GetPoint),
-    path('getcoefficient/', GetCoefficient)
 ]

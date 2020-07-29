@@ -1,12 +1,17 @@
+from app.station.models import StationInfo
 from django.db import models
 import datetime
+
 
 # Create your models here.
 class PigBase(models.Model):
     now_time = datetime.datetime.now().strftime('%F')
-    stationid = models.CharField(default=0, max_length=20, verbose_name='饲喂站号')
-    pigid = models.CharField(max_length=16,verbose_name='身份码')
-    earid = models.CharField(max_length=16,verbose_name='耳标号')
+    stationInfo = models.ForeignKey(StationInfo,
+                                   to_field='build_unit_station',
+                                   on_delete=models.CASCADE,
+                                   verbose_name='饲喂站号')
+    pigid = models.CharField(max_length=16, unique=True, verbose_name='身份码')
+    earid = models.CharField(max_length=16, verbose_name='耳标号')
     pigkind = models.CharField(max_length=20, verbose_name='品种', null=True)
     malepignum = models.CharField(max_length=20, verbose_name='与配公猪号')
     # backfat = models.CharField(max_length=20,verbose_name='背膘厚')

@@ -2,6 +2,7 @@ from .models import PigBase
 from ..food_quantity.models import FoodQuantity
 from django.http import JsonResponse
 from django.views import View
+from django.db.models import Q
 import json
 import datetime
 
@@ -13,10 +14,14 @@ def algo_backfat(backfat):
 class PigBaseCheck(View):
     def post(self, request):
         req = json.loads(request.body)
-        # print(req)
-        exist_pig = PigBase.objects.filter(stationid=req['pig_stationid'], earid=req['earid'], decpigtime=None)
-        if exist_pig:
-            return JsonResponse({'code': '猪只已存在，请重新输入'}, status=201)
+        exist_pigid = PigBase.objects.filter(
+            Q(pigid=req['pigid']) & Q(decpigtime=None))
+        exist_earid = PigBase.objects.filter(
+            Q(stationInfo=req['pig_stationid']) & Q(earid=req['earid']) & Q(decpigtime=None))
+        if exist_pigid:
+            return JsonResponse({'code': '该母猪号已存在，请检查输入'}, status=201)
+        elif exist_earid:
+            return JsonResponse({'code': '该栏中耳标号已存在，请选择其它耳标'}, status=201)
         else:
             P = PigBase()
             P.stationid = req['pig_stationid']

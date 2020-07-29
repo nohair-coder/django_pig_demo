@@ -8,22 +8,26 @@ import json
 # Create your views here.
 class Station(View):
     def post(self, request):
-        req = json.loads(request.body)
-        # print(req)
-        exist_S = StationInfo.objects.filter(room_station=req).first()
-        if exist_S == None:
-            S = StationInfo()
-            S.room_station = req
-            S.save()
-            return JsonResponse({'code': '饲喂站添加成功'}, status=200)
-        else:
-            return JsonResponse({'code': '饲喂站已存在,请重新输入'}, status=201)
+        try:
+            req = json.loads(request.body)
+            print(req)
+            exist_S = StationInfo.objects.filter(build_unit_station=req).first()
+            if exist_S == None:
+                S = StationInfo()
+                S.build_unit_station = req
+                S.save()
+                return JsonResponse({'code': '饲喂站添加成功'}, status=200)
+            else:
+                return JsonResponse({'code': '饲喂站已存在,请重新输入'}, status=201)
+        except Exception as e:
+            print(e)
 
     def get(self, request):
         try:
             try:
                 req_pageIndex = request.GET['pageIndex']
-            except:
+            except Exception as e:
+                # print(e)
                 req_pageIndex = 1
             stationlist = StationInfo.objects.filter()
             station_options = list()
@@ -34,15 +38,15 @@ class Station(View):
                     s.status_num = False
                 else:
                     s.status_num = True
-                s_info['id'] = s.room_station
+                s_info['build_unit_station'] = s.build_unit_station
                 s_info['status'] = s.status
                 s_info['temperature'] = s.temperature
                 s_info['humidity'] = str(s.humidity * 100) + '%'
                 s_info['status_num'] = s.status_num
                 all_station.append(s_info)
                 station_options.append({
-                    'value' : s_info['id'],
-                    'label' : s_info['id']
+                    'value' : s_info['build_unit_station'],
+                    'label' : s_info['build_unit_station']
                 })
             # print(station_options)
             total = len(all_station)

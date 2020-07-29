@@ -82,7 +82,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # 数据库引擎
         'NAME': 'pig_demo',  # 数据库名
-        'USER': 'root',  # id
+        'USER': 'admin',  # id
         'PASSWORD': '123456',  # 密码
         'HOST': 'localhost',  # 数据库域名
         'PORT': 3308,  # 数据库端口号
@@ -159,3 +159,17 @@ CORS_ALLOW_HEADERS = (
     'x-requested-with',
     'Pragma',
 )
+
+# django缓存配置
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache" # 将Session存储在缓存中，也可以设置存在数据库中
+SESSION_CACHE_ALIAS = "default"
