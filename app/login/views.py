@@ -1,6 +1,7 @@
 from .models import User
 from django.views import View
 from django.http import JsonResponse
+from django.core.cache import cache
 import json
 
 # Create your views here.
