@@ -21,6 +21,7 @@ class Station(View):
                 return JsonResponse({'code': '饲喂站已存在,请重新输入'}, status=201)
         except Exception as e:
             print(e)
+            return JsonResponse({'code': '添加失败'}, status=201)
 
     def get(self, request):
         try:
@@ -34,12 +35,8 @@ class Station(View):
             all_station = list()
             for s in stationlist:
                 s_info = dict()
-                if s.status == '已关机':
-                    s.status_num = False
-                else:
-                    s.status_num = True
                 s_info['build_unit_station'] = s.build_unit_station
-                s_info['status'] = s.status
+                s_info['status'] = s.get_status_display()
                 s_info['temperature'] = s.temperature
                 s_info['humidity'] = str(s.humidity * 100) + '%'
                 s_info['status_num'] = s.status_num
@@ -68,6 +65,6 @@ class SystemCheck(View):
     def get(self, request):
         pig_num = PigBase.objects.filter().count()
         station_num = StationInfo.objects.filter().count()
-        print(pig_num)
-        print(station_num)
+        # print(pig_num)
+        # print(station_num)
         return JsonResponse({'code': '获取成功','pig_num': pig_num, 'station_num': station_num}, status=200)

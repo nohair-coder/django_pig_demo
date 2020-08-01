@@ -12,7 +12,7 @@ class User(models.Model):
     email = models.EmailField(unique = True,max_length=32)
     telephone = models.BigIntegerField(unique = True)
     sex = models.CharField(max_length = 32, choices = gender, default = "男")
-    create_time = models.DateTimeField(auto_now_add = True)
+    create_time = models.DateField(auto_now_add = True)
 
     # class Meta:
     #     db_table = "tb_User"

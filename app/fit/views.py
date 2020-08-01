@@ -1,5 +1,4 @@
 from django.http import JsonResponse
-from .models import FitFunction
 from django.views import View
 from templates.Response import SuccessResponse, FailResponse
 
