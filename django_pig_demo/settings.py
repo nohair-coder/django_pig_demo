@@ -85,7 +85,7 @@ DATABASES = {
         'USER': 'admin',  # id
         'PASSWORD': '123456',  # 密码
         'HOST': 'localhost',  # 数据库域名
-        'PORT': 3308,  # 数据库端口号
+        'PORT': 3306,  # 数据库端口号
         'OPTIONS': {
             'init_command': 'SET default_storage_engine=INNODB;',
         }

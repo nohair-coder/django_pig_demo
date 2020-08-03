@@ -1,6 +1,7 @@
 from ..station.models import StationInfo
 from .models import PigBase
 from ..food_quantity.models import FoodQuantity, Backfat
+from .pig_id_kind import pig_id_kind
 
 
 def algo_backfat(backfat):
@@ -11,6 +12,7 @@ def algo_backfat(backfat):
     """
     algo_intake = backfat * 2
     return algo_intake
+
 
 def write_pigbase(req):
     """
@@ -28,6 +30,7 @@ def write_pigbase(req):
     P.save()
     # print('write_pigbase')
 
+
 def write_backfat(req):
     """
     把数据写入背膘厚表
@@ -42,6 +45,7 @@ def write_backfat(req):
         B.backfat = None
     B.save()
     # print('write_backfat')
+
 
 def write_foodquantity(req):
     """
@@ -59,10 +63,21 @@ def write_foodquantity(req):
     F.save()
     # print('write_foodquantity')
 
+
 def is_none(backfat):
-    '''
+    """
     背膘厚不是 None
-    :param param:
+    :param backfat:
     :return:
-    '''
+    """
     return backfat if backfat != None else '-'
+
+
+def get_pig_kind(pigid):
+    """
+    根据母猪号后两位获取品种
+    :param pigid:
+    :return:
+    """
+    kind_id = pigid[-3:]
+    return pig_id_kind[kind_id]

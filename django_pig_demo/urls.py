@@ -16,7 +16,7 @@ Including another URLconf
 from django.urls import path
 from app.login.views import LoginCheck
 from app.station.views import Station, SystemCheck
-from app.pig_base.views import PigBaseCheck
+from app.pig_base.views import PigBaseCheck, UploadPig
 # from app.fit.views import GetPoint,GetCoefficient
 from app.food_quantity.views import SetIntake
 
@@ -25,5 +25,6 @@ urlpatterns = [
     path('system/', SystemCheck.as_view()),
     path('station/', Station.as_view()),
     path('pigbase/', PigBaseCheck.as_view()),
+    path('uploadpig/', UploadPig),
     path('setintake/', SetIntake.as_view()),
 ]

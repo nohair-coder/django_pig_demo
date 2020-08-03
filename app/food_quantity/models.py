@@ -22,7 +22,10 @@ class FoodQuantity(models.Model):
 
 class Backfat(models.Model):
     now_time = datetime.datetime.now().strftime('%F')
-    pigid = models.ForeignKey(PigBase, to_field='pigid', verbose_name='身份码', on_delete=models.CASCADE)
+    pigid = models.ForeignKey(PigBase,
+                              to_field='pigid',
+                              verbose_name='身份码',
+                              on_delete=models.CASCADE)
     backfat = models.FloatField(null=True, verbose_name='背膘厚')
     settime = models.DateField(default=now_time, verbose_name='设置日期')
 

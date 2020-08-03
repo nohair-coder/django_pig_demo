@@ -7,6 +7,7 @@ from django.db.models import Q
 import json
 import datetime
 
+
 # Create your views here.
 class PigBaseCheck(View):
     def post(self, request):
@@ -48,7 +49,7 @@ class PigBaseCheck(View):
         try:
             req = request.GET['StationId']
             # print(req)
-            piglist = PigBase.objects.filter(stationid=req,decpigtime=None)
+            piglist = PigBase.objects.filter(stationid=req, decpigtime=None)
             stationpig = list()
             for s in piglist:
                 s_info = dict()
@@ -57,12 +58,12 @@ class PigBaseCheck(View):
                 s_info['earid'] = s.earid
                 s_info['pigkind'] = s.pigkind
                 s_info['malepignum'] = s.malepignum
-                s_info['backfat']= is_none(FoodQuantity.objects.get(pigid=s.pigid).backfat)
+                s_info['backfat'] = is_none(FoodQuantity.objects.get(pigid=s.pigid).backfat)
                 s_info['gesage'] = s.gesage
                 s_info['breedtime'] = s.breedtime
                 stationpig.append(s_info)
             # print(stationpig)
-            return JsonResponse({'code':'获取pigbase成功', 'stationpig': stationpig},status=200)
+            return JsonResponse({'code': '获取pigbase成功', 'stationpig': stationpig}, status=200)
         except Exception as e:
             print(e)
             return JsonResponse({'code': '获取pigbase失败'}, status=201)
@@ -75,7 +76,7 @@ class PigBaseCheck(View):
         change_pig = PigBase.objects.get(pigid=req_pigid)
         change_pig.stationid = req_newstation
         change_pig.save()
-        return JsonResponse({'code': '转栏成功'},status=200)
+        return JsonResponse({'code': '转栏成功'}, status=200)
 
     def delete(self, request):
         now_time = datetime.datetime.now().strftime('%F')
@@ -87,7 +88,7 @@ class PigBaseCheck(View):
         sub_pig.save()
         return JsonResponse({'code': '离栏成功'}, status=200)
 
-    def patch(self,request):
+    def patch(self, request):
         req = json.loads(request.body)
         req_pigid = req['pigid']
         req_newearid = req['newearid']
@@ -97,3 +98,8 @@ class PigBaseCheck(View):
         change_pig.earid = req_newearid
         change_pig.save()
         return JsonResponse({'code': '更换成功'}, status=200)
+
+
+def UploadPig(txt):
+    print(123)
+    return JsonResponse({'code': '接收文件成功'}, status=200)
