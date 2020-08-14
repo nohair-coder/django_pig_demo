@@ -1,6 +1,6 @@
 from .models import PigBase
 from ..food_quantity.models import FoodQuantity
-from app.common.logic.pigbase_logic import write_pigbase, write_backfat, write_foodquantity, is_none, delete_pigbase
+from utils.common import write_pigbase, write_backfat, write_foodquantity, is_none, delete_pigbase
 from django.http import JsonResponse
 from django.views import View
 from django.db.models import Q

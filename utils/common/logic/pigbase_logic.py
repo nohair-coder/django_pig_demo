@@ -1,7 +1,7 @@
 from app.station.models import StationInfo
 from app.pig_base.models import PigBase
 from app.food_quantity.models import FoodQuantity, Backfat
-from app.common.pig_id_kind import pig_id_kind
+from utils.common import pig_id_kind
 import datetime
 
 def algo_backfat(backfat):
