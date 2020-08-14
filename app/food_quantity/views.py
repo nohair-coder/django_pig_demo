@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.views import View
 import json
 import datetime
-from utils.common import is_none
+from utils.common.logic.pigbase_logic import is_none
 # Create your views here.
 
 
