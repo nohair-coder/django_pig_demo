@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.views import View
 import json
 import datetime
-
+from app.common.logic.pigbase_logic import is_none
 # Create your views here.
 
 
@@ -19,15 +19,10 @@ def Caldate(date1):
     # %Y-%m-%d为日期格式，其中的-可以用其他代替或者不写，但是要统一，同理后面的时分秒也一样；可以只计算日期，不计算时间。
     # date1=time.strptime(date1,"%Y-%m-%d %H:%M:%S")
     # date2=time.strptime(date2,"%Y-%m-%d %H:%M:%S")
-    date1 = datetime.datetime.strptime(date1, "%Y-%m-%d")
+    date1 = datetime.datetime.strptime(date1[0:10], "%Y-%m-%d")
     date2 = datetime.datetime.strptime(now_time, "%Y-%m-%d")
-    return (date2 - date1).days
+    return (date2 - date1).days + 1
 
-def str_or_(a):
-    if a == None:
-        return '—'
-    else:
-        return a
 
 def final(index, algo, set):
     if set == None:
@@ -44,24 +39,29 @@ def algo_backfat(backfat):
 
 class SetIntake(View):
     def get(self,request):
-        req = request.GET['id']
-        print(req)
-        piglist = PigBase.objects.filter(stationid=req, decpigtime=None)
-        stationpig = list()
-        for s in piglist:
-            s_info = dict()
-            s_info['pigid'] = s.pigid
-            s_info['earid'] = s.earid
-            s_info['pigkind'] = s.pigkind
-            onepigbreedtime = s.breedtime
-            s_info['breeddays'] = Caldate(onepigbreedtime)
-            onepig = FoodQuantity.objects.get(pigid=s.pigid)
-            s_info['backfat'] = onepig.backfat
-            s_info['index_quantity'] = onepig.index_quantity
-            s_info['algo_quantity'] = str_or_(onepig.algo_quantity)
-            s_info['set_quantity'] = str_or_(onepig.set_quantity)
-            s_info['final_quantity'] = final(onepig.index_quantity, onepig.algo_quantity, onepig.set_quantity)
-            stationpig.append(s_info)
+        req = request.GET['StationId']
+        try:
+            print(req)
+            piglist = PigBase.objects.filter(stationid=req, decpigtime=None)
+            stationpig = list()
+            for s in piglist:
+                s_info = dict()
+                s_info['pigid'] = s.pigid
+                s_info['earid'] = s.earid
+                s_info['pigkind'] = s.pigkind
+                onepigbreedtime = s.breedtime
+                # print(onepigbreedtime)
+                s_info['breeddays'] = Caldate(onepigbreedtime)
+                onepig = FoodQuantity.objects.get(pigid=s.pigid)
+                s_info['backfat'] = is_none(onepig.backfat)
+                s_info['index_quantity'] = onepig.index_quantity
+                s_info['algo_quantity'] = is_none(onepig.algo_quantity)
+                s_info['set_quantity'] = is_none(onepig.set_quantity)
+                s_info['final_quantity'] = final(onepig.index_quantity, onepig.algo_quantity, onepig.set_quantity)
+                stationpig.append(s_info)
+        except Exception as e:
+            print(e)
+            stationpig = None
         return JsonResponse({'code': '获取intake成功', 'stationpig': stationpig}, status=200)
 
     def post(self,request):

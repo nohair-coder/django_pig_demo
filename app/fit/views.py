@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.views import View
-from templates.Response import SuccessResponse, FailResponse
+from utils.Response import SuccessResponse, FailResponse
 
 # Create your views here.
 

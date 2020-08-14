@@ -25,11 +25,6 @@ class Station(View):
 
     def get(self, request):
         try:
-            try:
-                req_pageIndex = request.GET['pageIndex']
-            except Exception as e:
-                # print(e)
-                req_pageIndex = 1
             stationlist = StationInfo.objects.filter()
             station_options = list()
             all_station = list()

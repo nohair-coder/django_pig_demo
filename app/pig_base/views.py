@@ -1,6 +1,6 @@
 from .models import PigBase
 from ..food_quantity.models import FoodQuantity
-from .logic import write_pigbase, write_backfat, write_foodquantity, is_none
+from app.common.logic.pigbase_logic import write_pigbase, write_backfat, write_foodquantity, is_none, delete_pigbase
 from django.http import JsonResponse
 from django.views import View
 from django.db.models import Q
@@ -11,6 +11,11 @@ import datetime
 # Create your views here.
 class PigBaseCheck(View):
     def post(self, request):
+        """
+        入栏
+        :param request:
+        :return:
+        """
         try:
             req = json.loads(request.body)
             print(req)
@@ -29,23 +34,17 @@ class PigBaseCheck(View):
                 write_pigbase(req)
                 write_backfat(req)
                 write_foodquantity(req)
-                # P.vaccine = ','.join(req['vaccine'])
-                # P.save()
-                # F = FoodQuantity()
-                # try:
-                #     F.backfat = req['backfat']
-                #     F.algo_quantity = algo_backfat(float(req['backfat']))
-                # except:
-                #     F.backfat = '—'
-                # F.pigid = req['pigid']
-                # F.earid = req['earid']
-                # F.save()
                 return JsonResponse({'code': '入栏成功'}, status=200)
         except Exception as e:
             print(e)
             return JsonResponse({'code': '入栏失败'}, status=201)
 
     def get(self, request):
+        """
+        获取pigbase猪只
+        :param request:
+        :return:
+        """
         try:
             req = request.GET['StationId']
             # print(req)
@@ -69,6 +68,11 @@ class PigBaseCheck(View):
             return JsonResponse({'code': '获取pigbase失败'}, status=201)
 
     def put(self, request):
+        """
+        更换新饲喂站
+        :param request:
+        :return:
+        """
         req = json.loads(request.body)
         print(req)
         req_pigid = req['pigid']
@@ -79,16 +83,24 @@ class PigBaseCheck(View):
         return JsonResponse({'code': '转栏成功'}, status=200)
 
     def delete(self, request):
+        """
+        离栏，并写入日志
+        :param request:
+        :return:
+        """
         now_time = datetime.datetime.now().strftime('%F')
         req = json.loads(request.body)
         req_pigid = req['pigid']
-        print(req_pigid)
-        sub_pig = PigBase.objects.get(pigid=req_pigid)
-        sub_pig.decpigtime = now_time
-        sub_pig.save()
+        # print(req_pigid)
+        delete_pigbase(req_pigid)
         return JsonResponse({'code': '离栏成功'}, status=200)
 
     def patch(self, request):
+        """
+        更换耳标号
+        :param request:
+        :return:
+        """
         req = json.loads(request.body)
         req_pigid = req['pigid']
         req_newearid = req['newearid']
@@ -100,6 +112,25 @@ class PigBaseCheck(View):
         return JsonResponse({'code': '更换成功'}, status=200)
 
 
-def UploadPig(txt):
-    print(123)
-    return JsonResponse({'code': '接收文件成功'}, status=200)
+def UploadPig(request):
+    """
+    上传excel一键入栏
+    :param request:
+    :return:
+    """
+    import openpyxl
+    if request.method == 'POST':
+        try:
+            req = request.FILES.getlist('file')[0]
+            workbook = openpyxl.load_workbook(req)
+            ws = workbook.worksheets[0]
+            for row in ws.rows:
+                print([item.value for item in row])
+            error_list = [123, 324, 123]
+            return JsonResponse({'code': '接收文件成功', 'error_list': error_list}, status=200)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'code': '接收文件失败'}, status=201)
+    else:
+        print(321)
+        return JsonResponse({'code': '不是POST'}, status=201)
